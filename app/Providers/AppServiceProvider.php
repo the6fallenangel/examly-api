@@ -25,7 +25,9 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('register-otp', function (Request $request) {
             $email = strtolower(trim($request->input('email', '')));
 
-            return Limit::perHour(5)
+            $perHour = app()->environment('local') ? 100 : 5;
+
+            return Limit::perHour($perHour)
                 ->by($request->ip().'|'.$email);
         });
     }
