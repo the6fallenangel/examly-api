@@ -8,9 +8,15 @@ it('can request a registration otp', function () {
 
     $res = $this->postJson('/api/v1/auth/register/request-otp', ['email' => 'ali@example.com']);
 
-    $res->assertOk()->assertJson([
-        'message' => 'Verification code sent successfully',
-    ]);
+    $res->assertOk()
+        ->assertJsonStructure([
+            'status',
+            'message',
+        ])
+        ->assertJson([
+            'status' => true,
+            'message' => 'Verification code sent successfully',
+        ]);
 
     Notification::assertSentOnDemand(
         RegisterOtpNotification::class
