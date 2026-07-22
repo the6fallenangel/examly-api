@@ -4,6 +4,7 @@ use App\Models\User;
 use App\Notifications\RegisterOtpNotification;
 use App\Services\OtpService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 
 uses(RefreshDatabase::class);
@@ -160,4 +161,74 @@ it('cannot get authenticated user without token', function () {
     $response = $this->getJson('/api/v1/auth/me');
 
     $response->assertUnauthorized();
+});
+
+it('can login with valid credentials', function () {
+
+    $user = User::factory()->create([
+        'email' => 'ali@example.com',
+        'password' => Hash::make('password123'),
+    ]);
+
+    $response = $this->postJson('/api/v1/auth/login', [
+        'email' => 'ali@example.com',
+        'password' => 'password123',
+    ]);
+
+    $response
+        ->assertOk()
+        ->assertJsonStructure([
+            'status',
+            'message',
+            'data' => [
+                'user',
+                'token',
+            ],
+        ])
+        ->assertJson([
+            'status' => true,
+            'message' => 'logged in successfully',
+        ]);
+
+    expect($response->json('data.token'))
+        ->toBeString();
+});
+
+it('cannot login with invalid credentials', function () {
+
+    $user = User::factory()->create([
+        'email' => 'ali@example.com',
+        'password' => Hash::make('password123'),
+    ]);
+
+    $response = $this->postJson('/api/v1/auth/login', [
+        'email' => 'ali@example.com',
+        'password' => 'wrong-password',
+    ]);
+
+    $response
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('email');
+});
+
+it('requires email to login', function () {
+
+    $response = $this->postJson('/api/v1/auth/login', [
+        'password' => 'password123',
+    ]);
+
+    $response
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('email');
+});
+
+it('requires password to login', function () {
+
+    $response = $this->postJson('/api/v1/auth/login', [
+        'email' => 'ali@example.com',
+    ]);
+
+    $response
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('password');
 });
