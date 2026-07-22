@@ -25,14 +25,8 @@ class SubmitAnswerAction
     /**
      * @return array<string, mixed>
      */
-    private function storeFile(Attempt $attempt, Question $question, UploadedFile $file): array
+    private function storeFile(Attempt $attempt, Question $question, UploadedFile $file): string
     {
-        $path = $file->store("attempts/{$attempt->id}/{$question->id}", 'local');
-
-        return [
-            'path' => $path,
-            'original_name' => $file->getClientOriginalName(),
-            'size' => $file->getSize(),
-        ];
+        return $file->store("attempts/{$attempt->id}/{$question->id}", 'local');
     }
 }

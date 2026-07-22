@@ -48,7 +48,7 @@ class AnswerController extends Controller
         EnsureAttemptAccessAction $ensureAccess,
         CompleteAttemptAction $act
     ): JsonResponse {
-        $exam = Exam::where('slug', $slug)->firstOrFail();
+        $exam = Exam::whereSlug($slug)->firstOrFail();
 
         $ensureAccess->execute($exam, $attempt, $request->header('X-Attempt-Token'));
 
