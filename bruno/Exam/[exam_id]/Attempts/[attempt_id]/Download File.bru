@@ -1,0 +1,22 @@
+meta {
+  name: Download File
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{API}}/{{VER}}/exams/{{exam_id}}/attempts/{{attempt_id}}/answers/{{answer_id}}/download
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  answer_id: 4
+  attempt_id: 2
+  exam_id: 4
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

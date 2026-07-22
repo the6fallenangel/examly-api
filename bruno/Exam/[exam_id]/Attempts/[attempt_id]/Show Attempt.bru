@@ -1,0 +1,84 @@
+meta {
+  name: Show Attempt
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{API}}/{{VER}}/exams/{{exam_id}}/attempts/{{attempt_id}}
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  exam_id: 4
+  attempt_id: 2
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Success
+  
+  request: {
+    url: {{API}}/{{VER}}/exams/{{exam_id}}/attempts/{{attempt_id}}
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 10:32:51 GMT
+      content-type: application/json
+      vary: Origin
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": true,
+          "message": "Success",
+          "data": {
+            "id": 1,
+            "taker_name": "Example",
+            "taker_email": "name@example.com",
+            "verified_at": "2026-07-22T09:48:15.000000Z",
+            "started_at": "2026-07-22T08:42:25.000000Z",
+            "completed_at": "2026-07-22T09:54:58.000000Z",
+            "answers": [
+              {
+                "id": 1,
+                "question_id": 4,
+                "question_prompt": "What happens when you type a URL into a browser?",
+                "question_type": "multiple_choice",
+                "response": "one",
+                "created_at": "2026-07-22T09:51:54.000000Z"
+              },
+              {
+                "id": 2,
+                "question_id": 5,
+                "question_prompt": "What is the difference between a process and a thread?",
+                "question_type": "text",
+                "response": "my answer is answer",
+                "created_at": "2026-07-22T09:54:55.000000Z"
+              }
+            ]
+          }
+        }
+      '''
+    }
+  }
+}
