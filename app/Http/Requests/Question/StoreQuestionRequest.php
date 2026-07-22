@@ -39,4 +39,13 @@ class StoreQuestionRequest extends FormRequest
             'is_required' => ['sometimes', 'boolean'],
         ];
     }
+
+    protected function prepareForValidation(): void
+    {
+        if (! $this->has('is_required')) {
+            $this->merge([
+                'is_required' => true,
+            ]);
+        }
+    }
 }

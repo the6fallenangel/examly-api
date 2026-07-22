@@ -20,7 +20,7 @@ class CreateExamAction
             'description' => $data['description'] ?? null,
             'slug' => $data['slug'],
             'status' => $status,
-            'published_at' => $publishedAt ?? ($status === ExamStatus::Draft ? null : now()),
+            'published_at' => $publishedAt ?? ($status === ExamStatus::Draft->value ? null : now()),
         ]);
     }
 }
