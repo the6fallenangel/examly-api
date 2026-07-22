@@ -22,49 +22,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        RateLimiter::for('register-otp', function (Request $request) {
+        $otpLimiter = function (Request $request, string $period) {
             $email = strtolower(trim($request->input('email', '')));
 
-            return Limit::perHour(
+            return Limit::{$period}(
                 app()->environment('local') ? 100 : 5
             )->by(
-                $email !== ''
-                    ? $request->ip().'|'.$email
-                    : $request->ip()
+                $request->ip().'|'.$email
             );
-        });
-        RateLimiter::for('verify-otp', function (Request $request) {
-            $email = strtolower(trim($request->input('email', '')));
+        };
 
-            return Limit::perMinute(
-                app()->environment('local') ? 100 : 5
-            )->by(
-                $email !== ''
-                    ? $request->ip().'|'.$email
-                    : $request->ip()
-            );
-        });
-        RateLimiter::for('attempt-request-otp', function (Request $request) {
-            $email = strtolower(trim($request->input('email', '')));
+        RateLimiter::for('register-otp', fn (Request $request) => $otpLimiter($request, 'perHour'));
+        RateLimiter::for('verify-otp', fn (Request $request) => $otpLimiter($request, 'perMinute'));
 
-            return Limit::perHour(
-                app()->environment('local') ? 100 : 5
-            )->by(
-                $email !== ''
-                    ? $request->ip().'|'.$email
-                    : $request->ip()
-            );
-        });
-        RateLimiter::for('attempt-verify-otp', function (Request $request) {
-            $email = strtolower(trim($request->input('email', '')));
+        RateLimiter::for('login', fn (Request $request) => $otpLimiter($request, 'perMinute'));
 
-            return Limit::perMinute(
-                app()->environment('local') ? 100 : 5
-            )->by(
-                $email !== ''
-                    ? $request->ip().'|'.$email
-                    : $request->ip()
-            );
-        });
+        RateLimiter::for('attempt-request-otp', fn (Request $request) => $otpLimiter($request, 'perHour'));
+        RateLimiter::for('attempt-verify-otp', fn (Request $request) => $otpLimiter($request, 'perMinute'));
     }
 }
