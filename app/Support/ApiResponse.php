@@ -26,7 +26,7 @@ class ApiResponse
         return response()->json([
             'status' => false,
             'message' => $message,
-            'errors' => $errors,
+            ...($errors !== null ? ['errors' => $errors] : []),
         ], $statusCode);
     }
 }

@@ -41,4 +41,11 @@ class AuthController extends Controller
             data: new UserResource($user)
         );
     }
+
+    public function me(): JsonResponse
+    {
+        return ApiResponse::success(
+            data: new UserResource(auth()->user())
+        );
+    }
 }
