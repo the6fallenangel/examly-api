@@ -44,5 +44,27 @@ class AppServiceProvider extends ServiceProvider
                     : $request->ip()
             );
         });
+        RateLimiter::for('attempt-request-otp', function (Request $request) {
+            $email = strtolower(trim($request->input('email', '')));
+
+            return Limit::perHour(
+                app()->environment('local') ? 100 : 5
+            )->by(
+                $email !== ''
+                    ? $request->ip().'|'.$email
+                    : $request->ip()
+            );
+        });
+        RateLimiter::for('attempt-verify-otp', function (Request $request) {
+            $email = strtolower(trim($request->input('email', '')));
+
+            return Limit::perMinute(
+                app()->environment('local') ? 100 : 5
+            )->by(
+                $email !== ''
+                    ? $request->ip().'|'.$email
+                    : $request->ip()
+            );
+        });
     }
 }
