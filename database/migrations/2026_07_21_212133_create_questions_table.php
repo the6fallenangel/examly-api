@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('exam_id')->constrained()->cascadeOnDelete();
-            $table->string('type', 50);
+            $table->string('type', 50)->default('text');
             $table->text('prompt');
             $table->json('options')->nullable();
             $table->json('config')->nullable();

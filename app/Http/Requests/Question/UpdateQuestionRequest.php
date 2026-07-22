@@ -14,7 +14,7 @@ class UpdateQuestionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('update', $this->route('exam'));
     }
 
     /**
@@ -24,9 +24,8 @@ class UpdateQuestionRequest extends FormRequest
      */
     public function rules(): array
     {
-        $type = $this->input('type', $this->route('question')?->type?->value);
-
-        $needsOptions = in_array($type, [
+        $type = $this->input('type');
+        $needsOptions = $type !== null && in_array($type, [
             QuestionType::MultipleChoice->value,
             QuestionType::Checkbox->value,
         ]);

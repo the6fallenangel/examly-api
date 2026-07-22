@@ -30,8 +30,6 @@ class QuestionController extends Controller
         Exam $exam,
         CreateQuestionAction $act
     ): JsonResponse {
-        $this->authorize('update', $exam);
-
         $question = $act->execute($exam, $req->validated());
 
         return ApiResponse::success(
@@ -56,8 +54,6 @@ class QuestionController extends Controller
         Question $question,
         UpdateQuestionAction $act
     ): JsonResponse {
-        $this->authorize('update', $exam);
-
         $question = $act->execute($question, $req->validated());
 
         return ApiResponse::success(
@@ -68,7 +64,7 @@ class QuestionController extends Controller
 
     public function destroy(Exam $exam, Question $question): JsonResponse
     {
-        $this->authorize('update', $exam);
+        $this->authorize('delete', $exam);
 
         $question->delete();
 
