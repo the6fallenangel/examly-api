@@ -1,0 +1,70 @@
+meta {
+  name: Request Otp
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{API}}/{{VER}}/public/exams/{{exam_slug}}/attempts/request-otp
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "name@example.com"
+  }
+}
+
+vars:pre-request {
+  exam_slug: first-exam
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Success
+  
+  request: {
+    url: {{API}}/{{VER}}/public/exams/{{exam_slug}}/attempts/request-otp
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "email": "name@example.com"
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 08:40:19 GMT
+      content-type: application/json
+      vary: Origin
+      x-ratelimit-limit: 100
+      x-ratelimit-remaining: 97
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": true,
+          "message": "verification code sent successfully"
+        }
+      '''
+    }
+  }
+}

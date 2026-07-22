@@ -1,0 +1,110 @@
+meta {
+  name: Verify Otp
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{API}}/{{VER}}/public/exams/{{exam_slug}}/attempts/verify-otp
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "name@example.com",
+    "otp": "815337",
+    "name": "Example"
+  }
+}
+
+vars:pre-request {
+  exam_slug: first-exam
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Success
+  
+  request: {
+    url: {{API}}/{{VER}}/public/exams/{{exam_slug}}/attempts/verify-otp
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "email": "name@example.com",
+        "otp": "815337",
+        "name": "Example"
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 08:42:25 GMT
+      content-type: application/json
+      vary: Origin
+      x-ratelimit-limit: 100
+      x-ratelimit-remaining: 98
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": true,
+          "message": "identity verified successfully",
+          "data": {
+            "attempt_id": 1,
+            "exam": {
+              "title": "First Exam",
+              "description": "updated description",
+              "slug": "first-exam",
+              "questions": [
+                {
+                  "id": 4,
+                  "type": "multiple_choice",
+                  "prompt": "What happens when you type a URL into a browser?",
+                  "options": [
+                    "one",
+                    "two",
+                    "three"
+                  ],
+                  "config": null,
+                  "sort_order": 1,
+                  "is_required": true,
+                  "created_at": "2026-07-22T07:47:54.000000Z",
+                  "updated_at": "2026-07-22T07:47:54.000000Z"
+                },
+                {
+                  "id": 5,
+                  "type": "text",
+                  "prompt": "What is the difference between a process and a thread?",
+                  "options": null,
+                  "config": null,
+                  "sort_order": 2,
+                  "is_required": false,
+                  "created_at": "2026-07-22T07:52:12.000000Z",
+                  "updated_at": "2026-07-22T07:53:24.000000Z"
+                }
+              ]
+            }
+          }
+        }
+      '''
+    }
+  }
+}
