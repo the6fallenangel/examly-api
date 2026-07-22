@@ -1,0 +1,69 @@
+meta {
+  name: Show Exam
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{API}}/{{VER}}/exams/{{exam_id}}
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  exam_id: 1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Success
+  
+  request: {
+    url: {{API}}/{{VER}}/exams/{{examId}}
+    method: GET
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 07:15:54 GMT
+      content-type: application/json
+      vary: Origin
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": true,
+          "message": "Success",
+          "data": {
+            "id": 1,
+            "title": "First Exam",
+            "description": "our first exam for you smart exam takers",
+            "slug": "first-exam",
+            "status": "draft",
+            "published_at": "2026-07-22T07:12:51.000000Z",
+            "questions_count": 0,
+            "attempts_count": 0,
+            "created_at": "2026-07-22T07:12:51.000000Z",
+            "updated_at": "2026-07-22T07:12:51.000000Z"
+          }
+        }
+      '''
+    }
+  }
+}

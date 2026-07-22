@@ -1,0 +1,58 @@
+meta {
+  name: Delete Question
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{API}}/{{VER}}/exams/{{exam_id}}/questions/{{question_id}}
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  exam_id: 1
+  question_id: 6
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Success
+  
+  request: {
+    url: {{API}}/{{VER}}/exams/{{exam_id}}/questions/{{question_id}}
+    method: DELETE
+    mode: none
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 07:54:21 GMT
+      content-type: application/json
+      vary: Origin
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": true,
+          "message": "question deleted successfully"
+        }
+      '''
+    }
+  }
+}

@@ -1,0 +1,122 @@
+meta {
+  name: Create Exam
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{API}}/{{VER}}/exams
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "First Exam"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Success
+  
+  request: {
+    url: {{API}}/{{VER}}/exams
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "title": "Second Exam"
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 07:29:14 GMT
+      content-type: application/json
+      vary: Origin
+    }
+  
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": true,
+          "message": "exam created successfully",
+          "data": {
+            "id": 2,
+            "title": "Second Exam",
+            "description": null,
+            "slug": "second-exam",
+            "status": "draft",
+            "published_at": null,
+            "questions_count": 0,
+            "attempts_count": 0,
+            "created_at": "2026-07-22T07:29:14.000000Z",
+            "updated_at": "2026-07-22T07:29:14.000000Z"
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Error
+  
+  request: {
+    url: {{API}}/{{VER}}/exams
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "title": ""
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 07:29:52 GMT
+      content-type: application/json
+      vary: Origin
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "The title field is required.",
+          "errors": {
+            "title": [
+              "The title field is required."
+            ]
+          }
+        }
+      '''
+    }
+  }
+}

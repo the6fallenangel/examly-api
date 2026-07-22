@@ -1,0 +1,80 @@
+meta {
+  name: Update Question
+  type: http
+  seq: 2
+}
+
+patch {
+  url: {{API}}/{{VER}}/exams/{{exam_id}}/questions/{{question_id}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "is_required": false
+  }
+}
+
+vars:pre-request {
+  exam_id: 1
+  question_id: 5
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Success
+  
+  request: {
+    url: {{API}}/{{VER}}/exams/{{exam_id}}/questions/{{question_id}}
+    method: PATCH
+    mode: json
+    body:json: {
+      {
+        "is_required": false
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 07:53:25 GMT
+      content-type: application/json
+      vary: Origin
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": true,
+          "message": "question updated successfully",
+          "data": {
+            "id": 5,
+            "type": "text",
+            "prompt": "What is the difference between a process and a thread?",
+            "options": null,
+            "config": null,
+            "sort_order": 2,
+            "is_required": false,
+            "created_at": "2026-07-22T07:52:12.000000Z",
+            "updated_at": "2026-07-22T07:53:24.000000Z"
+          }
+        }
+      '''
+    }
+  }
+}
