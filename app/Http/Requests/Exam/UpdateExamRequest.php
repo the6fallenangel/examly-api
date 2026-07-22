@@ -38,7 +38,7 @@ class UpdateExamRequest extends FormRequest
                 'max:255',
                 Rule::unique(Exam::class)->ignore($examId),
             ],
-            'published_at' => ['nullable', 'date'],
+            'published_at' => ['nullable', 'date', 'after_or_equal:now'],
         ];
     }
 

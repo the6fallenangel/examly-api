@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Exam\ExamController;
+use App\Http\Controllers\Api\Exam\QuestionController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -17,5 +18,6 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('exams', ExamController::class);
+        Route::apiResource('exams.questions', QuestionController::class);
     });
 });
