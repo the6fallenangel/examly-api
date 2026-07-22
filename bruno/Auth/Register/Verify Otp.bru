@@ -1,0 +1,135 @@
+meta {
+  name: Verify Otp
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{API}}/{{VER}}/auth/register/verify-otp
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "name@example.com",
+    "otp": "116085",
+    "name": "Example Name",
+    "password": "12345678",
+    "password_confirmation": "12345678"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Success
+  
+  request: {
+    url: {{API}}/{{VER}}/auth/register/verify-otp
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "email": "example@example.com",
+        "otp": "116085",
+        "name": "Example Name",
+        "password": "12345678",
+        "password_confirmation": "12345678"
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 06:14:11 GMT
+      content-type: application/json
+      vary: Origin
+      x-ratelimit-limit: 100
+      x-ratelimit-remaining: 99
+    }
+  
+    status: {
+      code: 201
+      text: Created
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": true,
+          "message": "account created successfully",
+          "data": {
+            "user": {
+              "id": 16,
+              "name": "Example Name",
+              "email": "example@example.com",
+              "created_at": "2026-07-22T06:14:11.000000Z"
+            },
+            "token": "13|fJXL6qZVgbCz5x6qXZ9wqbGzuteT9fcLM7hOf10c220d76d6"
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Error
+  
+  request: {
+    url: {{API}}/{{VER}}/auth/register/verify-otp
+    method: POST
+    mode: json
+    body:json: {
+      {
+        "email": "example@example.com",
+        "otp": "116085",
+        "name": "Example Name",
+        "password": "12345678",
+        "password_confirmation": "12345678"
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 06:14:42 GMT
+      content-type: application/json
+      vary: Origin
+      x-ratelimit-limit: 100
+      x-ratelimit-remaining: 98
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "invalid verification code",
+          "errors": {
+            "otp": [
+              "invalid verification code"
+            ]
+          }
+        }
+      '''
+    }
+  }
+}

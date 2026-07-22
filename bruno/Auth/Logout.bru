@@ -1,0 +1,66 @@
+meta {
+  name: Logout
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{API}}/{{VER}}/auth/logout
+  body: none
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Origin: {{BASE}}
+  Accept: application/json
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Success
+  
+  request: {
+    url: {{API}}/{{VER}}/auth/logout
+    method: POST
+    mode: none
+    headers: {
+      Content-Type: application/json
+      Origin: {{BASE}}
+      Accept: application/json
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 06:17:39 GMT
+      content-type: application/json
+      access-control-allow-origin: http://localhost:8000
+      vary: Origin
+      access-control-allow-credentials: true
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": true,
+          "message": "logged out successfully"
+        }
+      '''
+    }
+  }
+}

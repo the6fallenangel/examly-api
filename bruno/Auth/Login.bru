@@ -1,0 +1,144 @@
+meta {
+  name: Login
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{API}}/{{VER}}/auth/login
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Origin: {{BASE}}
+  Accept: application/json
+}
+
+body:json {
+  {
+    "email": "example@example.com",
+    "password": "12345678"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Success
+  
+  request: {
+    url: {{API}}/{{VER}}/auth/login
+    method: POST
+    mode: json
+    headers: {
+      Content-Type: application/json
+      Origin: {{BASE}}
+      Accept: application/json
+    }
+  
+    body:json: {
+      {
+        "email": "example@example.com",
+        "password": "12345678"
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 06:16:30 GMT
+      content-type: application/json
+      access-control-allow-origin: http://localhost:8000
+      vary: Origin
+      access-control-allow-credentials: true
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": true,
+          "message": "logged in successfully",
+          "data": {
+            "user": {
+              "id": 16,
+              "name": "Example Name",
+              "email": "example@example.com",
+              "created_at": "2026-07-22T06:14:11.000000Z"
+            },
+            "token": "14|Gbz7WdvVjFeS0mazXqWnxR8mLwwoJde4WVGJktmdb3d6da54"
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Error
+  
+  request: {
+    url: {{API}}/{{VER}}/auth/login
+    method: POST
+    mode: json
+    headers: {
+      Content-Type: application/json
+      Origin: {{BASE}}
+      Accept: application/json
+    }
+  
+    body:json: {
+      {
+        "email": "name@example.com",
+        "password": "wrong"
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 06:16:47 GMT
+      content-type: application/json
+      access-control-allow-origin: http://localhost:8000
+      vary: Origin
+      access-control-allow-credentials: true
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "The provided credentials are incorrect.",
+          "errors": {
+            "email": [
+              "The provided credentials are incorrect."
+            ]
+          }
+        }
+      '''
+    }
+  }
+}
