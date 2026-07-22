@@ -1,0 +1,139 @@
+meta {
+  name: Answer a Question
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{API}}/{{VER}}/public/exams/{{exam_slug}}/attempts/{{attempt_id}}/questions/{{question_id}}/answer
+  body: json
+  auth: inherit
+}
+
+headers {
+  X-Attempt-Token: {{ATTEMPT_TOKEN}}
+}
+
+body:json {
+  {
+    "response": "my answer is answer"
+  }
+}
+
+vars:pre-request {
+  exam_slug: first-exam
+  question_id: 5
+  attempt_id: 1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Success
+  
+  request: {
+    url: {{API}}/{{VER}}/public/exams/{{exam_slug}}/attempts/{{attempt_id}}/questions/{{question_id}}/answer
+    method: POST
+    mode: json
+    headers: {
+      X-Attempt-Token: {{ATTEMPT_TOKEN}}
+    }
+  
+    body:json: {
+      {
+        "response": "one"
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 09:51:54 GMT
+      content-type: application/json
+      vary: Origin
+      x-ratelimit-limit: 100
+      x-ratelimit-remaining: 99
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": true,
+          "message": "answer saved successfully",
+          "data": {
+            "id": 1,
+            "question_id": 4,
+            "response": "one",
+            "created_at": "2026-07-22T09:51:54.000000Z",
+            "updated_at": "2026-07-22T09:51:54.000000Z"
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Error
+  
+  request: {
+    url: {{API}}/{{VER}}/public/exams/{{exam_slug}}/attempts/{{attempt_id}}/questions/{{question_id}}/answer
+    method: POST
+    mode: json
+    headers: {
+      X-Attempt-Token: {{ATTEMPT_TOKEN}}
+    }
+  
+    body:json: {
+      {
+        "response": "out of question options"
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 09:52:32 GMT
+      content-type: application/json
+      vary: Origin
+      x-ratelimit-limit: 100
+      x-ratelimit-remaining: 98
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "The selected response is invalid.",
+          "errors": {
+            "response": [
+              "The selected response is invalid."
+            ]
+          }
+        }
+      '''
+    }
+  }
+}

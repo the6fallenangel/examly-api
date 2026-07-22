@@ -1,0 +1,113 @@
+meta {
+  name: Complete Answers
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{API}}/{{VER}}/public/exams/{{exam_slug}}/attempts/{{attempt_id}}/complete
+  body: none
+  auth: inherit
+}
+
+headers {
+  X-Attempt-Token: {{ATTEMPT_TOKEN}}
+}
+
+vars:pre-request {
+  exam_slug: first-exam
+  attempt_id: 1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Error
+  
+  request: {
+    url: {{API}}/{{VER}}/public/exams/{{exam_slug}}/attempts/{{attempt_id}}/complete
+    method: POST
+    mode: none
+    headers: {
+      X-Attempt-Token: {{ATTEMPT_TOKEN}}
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 09:54:06 GMT
+      content-type: application/json
+      vary: Origin
+      x-ratelimit-limit: 100
+      x-ratelimit-remaining: 98
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "message": "please answer all required questions before completing the attempt",
+          "errors": {
+            "questions": [
+              "please answer all required questions before completing the attempt"
+            ]
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Success
+  
+  request: {
+    url: {{API}}/{{VER}}/public/exams/{{exam_slug}}/attempts/{{attempt_id}}/complete
+    method: POST
+    mode: none
+    headers: {
+      X-Attempt-Token: {{ATTEMPT_TOKEN}}
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Wed, 22 Jul 2026 09:54:58 GMT
+      content-type: application/json
+      vary: Origin
+      x-ratelimit-limit: 100
+      x-ratelimit-remaining: 98
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": true,
+          "message": "attempt completed successfully"
+        }
+      '''
+    }
+  }
+}
