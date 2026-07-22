@@ -14,6 +14,7 @@ use App\Http\Resources\UserResource;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
@@ -42,7 +43,8 @@ class AuthController extends Controller
             data: [
                 'user' => new UserResource($user),
                 'token' => $token,
-            ]
+            ],
+            statusCode: Response::HTTP_CREATED
         );
     }
 

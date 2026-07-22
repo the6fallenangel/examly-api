@@ -68,7 +68,7 @@ it('creates a user with valid registration otp', function () {
     ]);
 
     $response
-        ->assertOk()
+        ->assertCreated()
         ->assertJsonStructure([
             'status',
             'message',
@@ -119,7 +119,7 @@ it('removes otp after successful registration', function () {
         'password' => 'password123',
         'password_confirmation' => 'password123',
     ])
-        ->assertOk();
+        ->assertCreated();
 
     expect($otpService->verify($email, $otp))
         ->toBeFalse();
