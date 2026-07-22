@@ -4,11 +4,13 @@ use App\Http\Controllers\Api\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
-    Route::prefix('auth')->group(function () {
-        Route::post('register/request-otp', [AuthController::class, 'requestOtp'])->middleware('throttle:register-otp');
-        Route::post('register/verify-otp', [AuthController::class, 'verifyOtp'])->middleware('throttle:verify-otp');
+    Route::prefix('auth')->controller(AuthController::class)->group(function () {
+        Route::middleware('guest.api')->group(function () {
+            Route::post('register/request-otp', 'requestOtp')->middleware('throttle:register-otp');
+            Route::post('register/verify-otp', 'verifyOtp')->middleware('throttle:verify-otp');
+        });
         Route::middleware('auth:sanctum')->group(function () {
-            Route::get('me', [AuthController::class, 'me']);
+            Route::get('me', 'me');
         });
     });
 });

@@ -1,6 +1,6 @@
 <?php
 
-use App\Support\ApiResponse;
+use App\Http\Middleware\EnsureGuestApi;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -17,6 +17,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
         $middleware->api(HandleCors::class);
+        $middleware->alias([
+            'guest.api' => EnsureGuestApi::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
@@ -24,10 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
         );
         $exceptions->render(function (HttpException $e, Request $request) {
             if ($e->getStatusCode() === 419 && $request->is('api/*') && $request->user()) {
-                return ApiResponse::error(
-                    message: 'you are already authenticated',
-                    statusCode: 403
-                );
+                return EnsureGuestApi::alreadyAuthenticatedResponse();
             }
         });
     })->create();
