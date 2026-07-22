@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Exam\AttemptController as ExamAttemptController;
 use App\Http\Controllers\Api\Exam\ExamController;
 use App\Http\Controllers\Api\Exam\QuestionController;
 use App\Http\Controllers\Api\Public\AnswerController;
@@ -22,6 +23,14 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('exams', ExamController::class);
         Route::apiResource('exams.questions', QuestionController::class);
+
+        Route::prefix('exams/{exam}/attempts')->controller(ExamAttemptController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{attempt}', 'show')->scopeBindings();
+            Route::get('{attempt}/answers/{answer}/download', 'downloadAnswerFile')
+                ->scopeBindings()
+                ->name('exams.attempts.answers.download');
+        });
     });
 
     Route::prefix('public')->group(function () {

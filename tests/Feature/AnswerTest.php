@@ -93,7 +93,7 @@ it('can upload a file for a file upload question', function () {
 
     $answer = $attempt->answers()->first();
 
-    Storage::disk('local')->assertExists($answer->response['path']);
+    Storage::disk('local')->assertExists($answer->response);
 });
 
 it('can complete an attempt after answering all required questions', function () {
