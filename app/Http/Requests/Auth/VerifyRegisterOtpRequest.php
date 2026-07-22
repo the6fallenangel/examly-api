@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class SendRegisterOtpRequest extends FormRequest
+class VerifyRegisterOtpRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
         return true;
@@ -24,9 +25,23 @@ class SendRegisterOtpRequest extends FormRequest
         return [
             'email' => [
                 'required',
-                'email:rfc',
+                'email',
                 'max:255',
-                Rule::unique(User::class),
+            ],
+            'otp' => [
+                'required',
+                'digits:6',
+            ],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
             ],
         ];
     }
