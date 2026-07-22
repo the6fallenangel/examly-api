@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Attempt;
 use App\Models\Exam;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Attempt>
@@ -21,6 +22,7 @@ class AttemptFactory extends Factory
             'started_at' => null,
             'completed_at' => null,
             'ip_address' => fake()->ipv4(),
+            'token' => Str::random(64),
         ];
     }
 

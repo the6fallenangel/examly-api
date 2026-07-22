@@ -5,6 +5,7 @@ namespace App\Actions\Attempt;
 use App\Models\Attempt;
 use App\Models\Exam;
 use App\Services\OtpService;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class VerifyAttemptOtpAction
@@ -41,8 +42,18 @@ class VerifyAttemptOtpAction
                 'verified_at' => now(),
                 'started_at' => $existing?->started_at ?? now(),
                 'ip_address' => $ip,
+                'token' => $existing?->token ?? $this->generateToken(),
             ]
         );
+    }
+
+    private function generateToken()
+    {
+        do {
+            $token = Str::random(64);
+        } while (Attempt::query()->where('token', $token)->exists());
+
+        return $token;
     }
 
     private function otpService(Exam $exam): OtpService

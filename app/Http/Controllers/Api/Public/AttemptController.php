@@ -47,6 +47,7 @@ class AttemptController extends Controller
             message: 'identity verified successfully',
             data: [
                 'attempt_id' => $attempt->id,
+                'attempt_token' => $attempt->token,
                 'exam' => new PublicExamResource($exam->load('questions')),
             ]
         );

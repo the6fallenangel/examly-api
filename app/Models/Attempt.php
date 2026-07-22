@@ -4,13 +4,15 @@ namespace App\Models;
 
 use Database\Factories\AttemptFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['exam_id', 'taker_email', 'taker_name', 'verified_at', 'started_at', 'completed_at', 'ip_address'])]
+#[Fillable(['exam_id', 'taker_email', 'taker_name', 'verified_at', 'started_at', 'completed_at', 'ip_address', 'token'])]
+#[Hidden(['token'])]
 class Attempt extends Model
 {
     /** @use HasFactory<AttemptFactory> */
