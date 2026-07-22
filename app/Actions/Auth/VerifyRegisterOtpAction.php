@@ -4,6 +4,7 @@ namespace App\Actions\Auth;
 
 use App\Models\User;
 use App\Services\OtpService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -32,6 +33,8 @@ class VerifyRegisterOtpAction
             ]);
         });
         $this->otpService->forget($email);
+
+        Auth::login($user);
 
         return $user;
     }
