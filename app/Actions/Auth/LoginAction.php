@@ -3,7 +3,7 @@
 namespace App\Actions\Auth;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class LoginAction
@@ -11,20 +11,17 @@ class LoginAction
     public function execute(
         string $email,
         string $password
-    ): User {
-        $cred = [
-            'email' => $email,
-            'password' => $password,
-        ];
-
-        if (! Auth::attempt($cred)) {
+    ): array {
+        $user = User::whereEmail($email)->first();
+        if (! $user || ! Hash::check($password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => [
                     'The provided credentials are incorrect.',
                 ],
             ]);
         }
+        $token = $user->createToken('web')->plainTextToken;
 
-        return Auth::user();
+        return [$user, $token];
     }
 }

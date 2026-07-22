@@ -23,14 +23,14 @@ class AuthController extends Controller
     ): JsonResponse {
         $act->execute($req->validated('email'));
 
-        return ApiResponse::success(message: 'Verification code sent successfully');
+        return ApiResponse::success(message: 'verification code sent successfully');
     }
 
     public function verifyOtp(
         VerifyRegisterOtpRequest $req,
         VerifyRegisterOtpAction $act
     ): JsonResponse {
-        $user = $act->execute(
+        [$user, $token] = $act->execute(
             email: $req->validated('email'),
             otp: $req->validated('otp'),
             name: $req->validated('name'),
@@ -39,14 +39,17 @@ class AuthController extends Controller
 
         return ApiResponse::success(
             message: 'account created successfully',
-            data: new UserResource($user)
+            data: [
+                'user' => new UserResource($user),
+                'token' => $token,
+            ]
         );
     }
 
     public function me(): JsonResponse
     {
         return ApiResponse::success(
-            data: new UserResource(auth()->user())
+            data: new UserResource(request()->user())
         );
     }
 
@@ -54,14 +57,17 @@ class AuthController extends Controller
         LoginRequest $req,
         LoginAction $act
     ): JsonResponse {
-        $user = $act->execute(
+        [$user, $token] = $act->execute(
             email: $req->validated('email'),
             password: $req->validated('password')
         );
 
         return ApiResponse::success(
             message: 'logged in successfully',
-            data: new UserResource($user)
+            data: [
+                'user' => new UserResource($user),
+                'token' => $token,
+            ]
         );
     }
 

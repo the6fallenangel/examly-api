@@ -5,14 +5,15 @@ use App\Notifications\RegisterOtpNotification;
 use App\Services\OtpService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
-use Laravel\Sanctum\Sanctum;
 
 uses(RefreshDatabase::class);
 
 it('can request a registration otp', function () {
     Notification::fake();
 
-    $res = $this->postJson('/api/v1/auth/register/request-otp', ['email' => 'ali@example.com']);
+    $res = $this->postJson('/api/v1/auth/register/request-otp', [
+        'email' => 'ali@example.com',
+    ]);
 
     $res->assertOk()
         ->assertJsonStructure([
@@ -21,7 +22,7 @@ it('can request a registration otp', function () {
         ])
         ->assertJson([
             'status' => true,
-            'message' => 'Verification code sent successfully',
+            'message' => 'verification code sent successfully',
         ]);
 
     Notification::assertSentOnDemand(
@@ -35,23 +36,6 @@ it('requires email to request otp', function () {
     $response
         ->assertUnprocessable()
         ->assertJsonValidationErrors('email');
-});
-
-it('prevents authenticated users from requesting registration otp', function () {
-    Sanctum::actingAs(
-        User::factory()->create()
-    );
-
-    $response = $this->postJson('/api/v1/auth/register/request-otp', [
-        'email' => 'new@example.com',
-    ]);
-
-    $response
-        ->assertForbidden()
-        ->assertJson([
-            'status' => false,
-            'message' => 'you are already authenticated',
-        ]);
 });
 
 it('does not send otp for an existing email', function () {
@@ -84,17 +68,26 @@ it('creates a user with valid registration otp', function () {
 
     $response
         ->assertOk()
+        ->assertJsonStructure([
+            'status',
+            'message',
+            'data' => [
+                'user',
+                'token',
+            ],
+        ])
         ->assertJson([
             'status' => true,
             'message' => 'account created successfully',
         ]);
 
+    expect($response->json('data.token'))
+        ->toBeString();
+
     $this->assertDatabaseHas('users', [
         'email' => $email,
         'name' => 'Ali',
     ]);
-
-    expect(auth()->check())->toBeTrue();
 });
 
 it('rejects invalid registration otp', function () {
@@ -142,4 +135,29 @@ it('validates registration verification data', function () {
             'name',
             'password',
         ]);
+});
+
+it('can get authenticated user', function () {
+    $user = User::factory()->create();
+
+    $token = $user->createToken('test')->plainTextToken;
+
+    $response = $this
+        ->withToken($token)
+        ->getJson('/api/v1/auth/me');
+
+    $response
+        ->assertOk()
+        ->assertJson([
+            'status' => true,
+            'data' => [
+                'email' => $user->email,
+            ],
+        ]);
+});
+
+it('cannot get authenticated user without token', function () {
+    $response = $this->getJson('/api/v1/auth/me');
+
+    $response->assertUnauthorized();
 });

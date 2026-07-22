@@ -4,7 +4,6 @@ namespace App\Actions\Auth;
 
 use App\Models\User;
 use App\Services\OtpService;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -17,7 +16,7 @@ class VerifyRegisterOtpAction
         string $otp,
         string $name,
         string $password
-    ) {
+    ): array {
         if (! $this->otpService->verify($email, $otp)) {
             throw ValidationException::withMessages([
                 'otp' => 'invalid verification code',
@@ -34,8 +33,11 @@ class VerifyRegisterOtpAction
         });
         $this->otpService->forget($email);
 
-        Auth::login($user);
+        $token = '';
+        if ($user instanceof User) {
+            $token = $user->createToken('web')->plainTextToken;
+        }
 
-        return $user;
+        return [$user, $token];
     }
 }
