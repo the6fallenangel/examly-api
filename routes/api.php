@@ -16,6 +16,7 @@ Route::prefix('v1')->group(function () {
         Route::post('login', 'login')->middleware('throttle:login');
         Route::middleware('auth:sanctum')->group(function () {
             Route::get('me', 'me');
+            Route::patch('me', 'updateProfile');
             Route::post('logout', 'logout');
         });
     });

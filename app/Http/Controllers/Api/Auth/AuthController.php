@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Actions\Auth\LoginAction;
 use App\Actions\Auth\LogoutAction;
 use App\Actions\Auth\SendRegisterOtpAction;
+use App\Actions\Auth\UpdateProfileAction;
 use App\Actions\Auth\VerifyRegisterOtpAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\SendRegisterOtpRequest;
+use App\Http\Requests\Auth\UpdateProfileRequest;
 use App\Http\Requests\Auth\VerifyRegisterOtpRequest;
 use App\Http\Resources\UserResource;
 use App\Support\ApiResponse;
@@ -80,5 +82,17 @@ class AuthController extends Controller
         $act->execute($req);
 
         return ApiResponse::success(message: 'logged out successfully');
+    }
+
+    public function updateProfile(
+        UpdateProfileRequest $req,
+        UpdateProfileAction $act
+    ): JsonResponse {
+        $user = $act->execute($req->user(), $req->validated());
+
+        return ApiResponse::success(
+            message: 'profile updated successfully',
+            data: new UserResource($user)
+        );
     }
 }
