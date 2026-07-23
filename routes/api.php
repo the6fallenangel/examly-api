@@ -41,6 +41,7 @@ Route::prefix('v1')->group(function () {
                 ->controller(AttemptController::class)->group(function () {
                     Route::post('request-otp', 'requestOtp')->middleware('throttle:attempt-request-otp');
                     Route::post('verify-otp', 'verifyOtp')->middleware('throttle:attempt-verify-otp');
+                    Route::get('{attempt}/resume', 'resume')->middleware('throttle:attempt-answers');
                 });
 
             Route::prefix('attempts/{attempt}')

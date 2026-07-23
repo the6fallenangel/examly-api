@@ -12,6 +12,7 @@ use App\Models\Attempt;
 use App\Models\Exam;
 use App\Models\Question;
 use App\Support\ApiResponse;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -28,6 +29,8 @@ class AnswerController extends Controller
         $exam = Exam::whereSlug($slug)->firstOrFail();
 
         $ensureAccess->execute($exam, $attempt, $req->header('X-Attempt-Token'));
+
+        $this->ensureNotCompleted($attempt);
 
         if ($question->exam_id !== $exam->id) {
             abort(404);
@@ -52,8 +55,17 @@ class AnswerController extends Controller
 
         $ensureAccess->execute($exam, $attempt, $request->header('X-Attempt-Token'));
 
+        $this->ensureNotCompleted($attempt);
+
         $act->execute($attempt);
 
         return ApiResponse::success(message: 'attempt completed successfully');
+    }
+
+    private function ensureNotCompleted(Attempt $attempt): void
+    {
+        if ($attempt->completed_at !== null) {
+            throw new AuthorizationException('this attempt has already been completed');
+        }
     }
 }

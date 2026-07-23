@@ -22,8 +22,8 @@ class EnsureAttemptAccessAction
             throw new AuthorizationException('attempt is not verified');
         }
 
-        if ($attempt->completed_at !== null) {
-            throw new AuthorizationException('this attempt has already been completed');
-        }
+        // if ($attempt->completed_at !== null) {
+        //     throw new AuthorizationException('this attempt has already been completed');
+        // }
     }
 }
