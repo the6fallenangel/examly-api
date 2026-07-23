@@ -1,4 +1,4 @@
-![Examly API Hero Banner](public/hero.jpg)
+![Examly API Hero Banner](public/hero-new.jpg)
 
 # Examly API
 
