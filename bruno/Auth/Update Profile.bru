@@ -1,0 +1,121 @@
+meta {
+  name: Update Profile
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{API}}/{{VER}}/auth/me
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "password": "newpassword",
+    "password_confirmation": "newpassword",
+    "current_password" : "old_password"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Success
+  
+  request: {
+    url: {{API}}/{{VER}}/auth/me
+    method: PATCH
+    mode: json
+    body:json: {
+      {
+        "name": "new Name"
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Thu, 23 Jul 2026 02:23:45 GMT
+      content-type: application/json
+      vary: Origin
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": true,
+          "message": "profile updated successfully",
+          "data": {
+            "id": 16,
+            "name": "new Name",
+            "email": "example@example.com",
+            "created_at": "2026-07-22T02:44:11.000000Z"
+          }
+        }
+      '''
+    }
+  }
+}
+
+example {
+  name: Error
+  
+  request: {
+    url: {{API}}/{{VER}}/auth/me
+    method: PATCH
+    mode: json
+    body:json: {
+      {
+        "password": "newpassword",
+        "password_confirmation": "newpassword",
+        "current_password" : "old_password"
+      }
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Thu, 23 Jul 2026 02:25:13 GMT
+      content-type: application/json
+      vary: Origin
+    }
+  
+    status: {
+      code: 422
+      text: Unprocessable Entity
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": false,
+          "message": "the provided password does not match your current password",
+          "errors": {
+            "current_password": [
+              "the provided password does not match your current password"
+            ]
+          }
+        }
+      '''
+    }
+  }
+}
