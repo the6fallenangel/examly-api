@@ -1,0 +1,124 @@
+meta {
+  name: Resume Exam
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{API}}/{{VER}}/public/exams/{{exam_slug}}/attempts/{{attempt_id}}/resume
+  body: none
+  auth: inherit
+}
+
+headers {
+  X-Attempt-Token: {{ATTEMPT_TOKEN}}
+}
+
+vars:pre-request {
+  exam_slug: second-exam
+  attempt_id: 3
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+example {
+  name: Success
+  
+  request: {
+    url: {{API}}/{{VER}}/public/exams/{{exam_slug}}/attempts/{{attempt_id}}/resume
+    method: GET
+    mode: none
+    headers: {
+      X-Attempt-Token: {{ATTEMPT_TOKEN}}
+    }
+  }
+  
+  response: {
+    headers: {
+      host: localhost:8000
+      connection: close
+      x-powered-by: PHP/8.3.6
+      cache-control: no-cache, private
+      date: Thu, 23 Jul 2026 02:12:50 GMT
+      content-type: application/json
+      vary: Origin
+      x-ratelimit-limit: 100
+      x-ratelimit-remaining: 98
+    }
+  
+    status: {
+      code: 200
+      text: OK
+    }
+  
+    body: {
+      type: json
+      content: '''
+        {
+          "status": true,
+          "message": "Success",
+          "data": {
+            "attempt": {
+              "id": 3,
+              "taker_name": "Example",
+              "started_at": "2026-07-23T02:10:01.000000Z",
+              "completed_at": null
+            },
+            "exam": {
+              "title": "Second Exam",
+              "description": null,
+              "slug": "second-exam",
+              "questions": [
+                {
+                  "id": 8,
+                  "type": "text",
+                  "prompt": "What is the difference between a process and a thread?",
+                  "options": null,
+                  "config": null,
+                  "sort_order": 1,
+                  "is_required": true,
+                  "created_at": "2026-07-22T22:35:37.000000Z",
+                  "updated_at": "2026-07-22T22:35:37.000000Z"
+                },
+                {
+                  "id": 9,
+                  "type": "text",
+                  "prompt": "What is the difference between a process and a thread?",
+                  "options": null,
+                  "config": null,
+                  "sort_order": 2,
+                  "is_required": true,
+                  "created_at": "2026-07-22T22:35:40.000000Z",
+                  "updated_at": "2026-07-22T22:35:40.000000Z"
+                },
+                {
+                  "id": 10,
+                  "type": "text",
+                  "prompt": "What is the difference between a process and a thread?",
+                  "options": null,
+                  "config": null,
+                  "sort_order": 3,
+                  "is_required": true,
+                  "created_at": "2026-07-22T22:35:44.000000Z",
+                  "updated_at": "2026-07-22T22:35:44.000000Z"
+                }
+              ]
+            },
+            "answers": [
+              {
+                "id": 5,
+                "question_id": 8,
+                "response": "my answer is answer",
+                "created_at": "2026-07-23T02:10:25.000000Z",
+                "updated_at": "2026-07-23T02:10:25.000000Z"
+              }
+            ]
+          }
+        }
+      '''
+    }
+  }
+}
